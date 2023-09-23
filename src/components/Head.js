@@ -1,23 +1,33 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { useState } from "react";
 import { YOUTUBE_SEARCH_API } from "../utils/constant";
 import { Link } from "react-router-dom";
+import { cacheResults } from "../utils/searchSlice";
 const Head = () => {
-    const dispatch = useDispatch();
 
-    const toggleMenuHandler = () => {
-        // Call dispatch with the action function
-        dispatch(toggleMenu()); 
-    }
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    // const [hideSuggestions, setHideSuggestions] = useState(false);
+
+    const searchCache = useSelector((store) => store.search);
+    const dispatch = useDispatch();
+
+    // searchCache = {
+    //   "iphone": ['iphone', 'iphone12', 'iphone13']
+    // }
+
+    // searchQuery = "iphone"
+    
     useEffect(() => {
       const timer = setTimeout(() => {
-        getSearchSuggestions()
+        if (searchCache[searchQuery]) {
+          setSuggestions(searchCache[searchQuery]);
+        }
+        else {
+          getSearchSuggestions();
+        }
       }, 2000);
       return () => {
         clearTimeout(timer);
@@ -33,6 +43,15 @@ const Head = () => {
         console.log("API CALL" + searchQuery);
         console.log(json);
         console.log(suggestions);
+        dispatch(cacheResults({
+          [searchQuery]: json[1],
+        })
+        );
+    }
+
+    const toggleMenuHandler = () => {
+      // Call dispatch with the action function
+      dispatch(toggleMenu()); 
     }
     return (
         <div className="grid grid-flow-col p-5 m-2 shadow-md">
