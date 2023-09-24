@@ -3,6 +3,7 @@ import { closeMenu } from "../utils/appSlice";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import CommentsContainer from "./CommentsContainer";
+import LiveChat from "./LiveChat";
 
 
 const Watchpage = () => {
@@ -14,8 +15,8 @@ const Watchpage = () => {
         dispatch(closeMenu());
     })
     return (
-        <div>
-          <div className="px-5">
+        <div className="w-full">
+          <div className="px-5  flex w-full">
             <div>
                 <iframe width="650" 
                 height="400" 
@@ -26,8 +27,10 @@ const Watchpage = () => {
                 autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
                 web-share" allowfullscreen></iframe>
             </div>
-            <div>
-                live chat
+            
+            <div className="w-full">
+            <div className="font-bold p-2">Live Chat</div>
+                <LiveChat />
             </div>
             
           </div>
